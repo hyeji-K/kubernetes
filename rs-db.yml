@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: pod-db
+  labels:
+    app: pod-word
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: pod-db
+  template:
+    metadata:
+      labels:
+        app: pod-db
+    spec:
+      containers:
+      - image: mysql:5.7
+        name: pod-db
+        env:
+        - name: "MYSQL_ROOT_PASSWORD"
+          value: "1234"
+          name: "MYSQL_DATABASE"
+          value: "wordpress"
+          name: "MYSQL_USER"
+          value: "admin"
+          name: "MYSQL_PASSWORD"
+          value: "1234"
+        volumeMounts:
+        - name: pod-db-vol
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+      volumes:
+      - name: pod-db-vol
+        persistentVolumeClaim:
+          claimName: pvc-db
+      

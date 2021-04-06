@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: pod-word
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-word
+  template:
+    metadata:
+      labels:
+        app: pod-word
+    spec:
+      containers:
+      - image: wordpress
+        name: pod-wordpress
+        env:
+        - name: "WORDPRESS_DB_HOST"
+          value: "db"
+          name: "WORDPRESS_DB_USER"
+          value: "wp-admin"
+          name: "WORDPRESS_DB_PASSWORD"
+          value: "1234"
+          name: "WORDPRESS_DB_NAME"
+          value: "wordpress"
+        volumeMounts:
+        - name: pod-word-vol
+          mountPath: /var/www/html
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      volumes:
+      - name: pod-word-vol
+        persistentVolumeClaim:
+          claimName: pvc-word

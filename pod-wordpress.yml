@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-word
+  labels:
+    app: pod-word
+spec:
+  containers:
+  - name: pod-word
+    image: wordpress:latest
+    env:
+    - name: WORDPRESS_DB_HOST
+      value: "svc-head-db"
+    - name: WORDPRESS_DB_USER
+      value: "wp-admin"
+    - name: WORDPRESS_DB_PASSWORD
+      value: "1234"
+    - name: WORDPRESS_DB_NAME
+      value: "wordpress"
+    volumeMounts:
+    - name: word-vol
+      mountPath: /var/www/html
+    ports:
+    - containerPort: 80
+  volumes:
+  - name: word-vol
+    persistentVolumeClaim:
+      claimName: pvc-word
